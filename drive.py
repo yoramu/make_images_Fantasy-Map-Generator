@@ -41,12 +41,13 @@ driver.find_element_by_xpath('//*[@id="customizeTab"]').click()
 driver.find_element_by_xpath('//*[@id="editScale"]').click()
 driver.find_element_by_xpath('//*[@id="toggleScaleBar"]').click()
 driver.find_element_by_xpath('//*[@id="scaleBottom"]/button[2]').click()
-#マップを設定どおりに更新する
-driver.find_element_by_xpath('//*[@id="randomMap"]').click()
+#Scale Editorを閉じる
+driver.find_element_by_xpath('//*[@id="dialogs"]/div[19]/div[1]/button').click()
 #optionを押す(設定取得のため)
 driver.find_element_by_xpath('//*[@id="optionsTab"]').click()
 
 for i in trange(3000):
+        driver.find_element_by_xpath('//*[@id="randomMap"]').click()
         sleep(5)
         driver.find_element_by_xpath('//*[@id="saveButton"]').click()
         sleep(5)
@@ -54,9 +55,7 @@ for i in trange(3000):
         #html保存
         # html = driver.page_source
         html = driver.find_element_by_xpath('//*[@id="options"]').text
-        print(html)
         d = datetime.now()
         with open("{0:%Y%m%d_%H%M%S}.txt".format(d), 'w', encoding='utf-8') as f:
                 f.write(html)
         sleep(5)
-        driver.find_element_by_xpath('//*[@id="randomMap"]').click()
