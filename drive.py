@@ -4,6 +4,9 @@ from selenium.webdriver.support.ui import Select
 from time import sleep
 from tqdm import trange
 from datetime import datetime
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 
 driver = webdriver.Chrome("./chromedriver")
@@ -47,10 +50,11 @@ driver.find_element_by_xpath('//*[@id="dialogs"]/div[19]/div[1]/button').click()
 driver.find_element_by_xpath('//*[@id="optionsTab"]').click()
 
 for i in trange(3000):
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "randomMap")))
         driver.find_element_by_xpath('//*[@id="randomMap"]').click()
-        sleep(5)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "saveButton")))
         driver.find_element_by_xpath('//*[@id="saveButton"]').click()
-        sleep(5)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "savePNG")))
         driver.find_element_by_xpath('//*[@id="savePNG"]').click()
         #html保存
         # html = driver.page_source
@@ -58,4 +62,3 @@ for i in trange(3000):
         d = datetime.now()
         with open("{0:%Y%m%d_%H%M%S}.txt".format(d), 'w', encoding='utf-8') as f:
                 f.write(html)
-        sleep(5)
