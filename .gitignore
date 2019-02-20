@@ -118,4 +118,4 @@ dmypy.json
 # Mac
 .DS_Store
 *.txt
-
+*.png

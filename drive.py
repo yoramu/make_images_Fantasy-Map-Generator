@@ -7,17 +7,25 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-
-
-driver = webdriver.Chrome("./chromedriver")
-driver.get("https://azgaar.github.io/Fantasy-Map-Generator/")
-
+import os
 
 template_list = ["Volcano", "High Island", "Low Island", "Continents", "Archipelago", "Atoll", "Mainland", "Peninsulas"]
 width = "320"
 height = "180"
 
 #フォルダーをつくりそこに入れていく
+d = datetime.now()
+download_directory  = "setting_{0:%Y%m%d_%H%M%S}".format(d)
+os.mkdir(download_directory)
+
+chop = webdriver.ChromeOptions()
+prefs = {"download.default_directory" : download_directory}
+chop.add_experimental_option("prefs",prefs)
+chop.add_argument('--ignore-certificate-errors')
+
+driver = webdriver.Chrome("./chromedriver",chrome_options = chop)
+driver.get("https://azgaar.github.io/Fantasy-Map-Generator/")
+
 
 #menuボタンを押す
 driver.find_element_by_xpath('//*[@id="optionsTrigger"]').click()
@@ -60,5 +68,6 @@ for i in trange(3000):
         # html = driver.page_source
         html = driver.find_element_by_xpath('//*[@id="options"]').text
         d = datetime.now()
-        with open("{0:%Y%m%d_%H%M%S}.txt".format(d), 'w', encoding='utf-8') as f:
+        with open(os.path.join(download_directory, "{0:%Y%m%d_%H%M%S}.txt".format(d)), 'w', encoding='utf-8') as f:
                 f.write(html)
+
