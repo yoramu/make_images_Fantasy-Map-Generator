@@ -24,7 +24,7 @@ def driver_setting():
         driver.get("https://azgaar.github.io/Fantasy-Map-Generator/")
         return driver, download_directory
 
-def map_setting(driver, width, height, template_list):
+def map_setting(driver, width, height, template):
         #menuボタンを押す
         driver.find_element_by_xpath('//*[@id="optionsTrigger"]').click()
         #sleep(3)
@@ -44,7 +44,7 @@ def map_setting(driver, width, height, template_list):
         height_ele.send_keys(height)
         #属性を設定する
         map_element = driver.find_element_by_xpath('//*[@id="templateInput"]')
-        Select(map_element).select_by_value(template_list[0])
+        Select(map_element).select_by_value(template)
         #メジャーを消す
         driver.find_element_by_xpath('//*[@id="customizeTab"]').click()
         driver.find_element_by_xpath('//*[@id="editScale"]').click()
@@ -74,7 +74,7 @@ def main():
         width = "320"
         height = "180"
         driver, download_directory = driver_setting()
-        map_setting(driver, width, height, template_list)
+        map_setting(driver, width, height, template_list[0])
         for i in trange(number_of_times):
                 save_map_images(driver,download_directory)
 
