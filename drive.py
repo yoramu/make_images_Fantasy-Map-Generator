@@ -7,6 +7,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 import os
 
 
@@ -24,17 +25,44 @@ def driver_setting():
         driver.get("https://azgaar.github.io/Fantasy-Map-Generator/")
         return driver, download_directory
 
+
+def map_style_setting(driver, template):
+        move = ActionChains(driver)
+        driver.find_element_by_xpath('//*[@id="styleTab"]').click()
+        #海を真っ黒にする スライダーを0にする
+        ele = driver.find_element_by_xpath('//*[@id="styleOpacityInput"]')
+        move.click_and_hold(ele).move_by_offset(-60, 0).release().perform()
+        #style選択のelement
+        map_element = driver.find_element_by_xpath('//*[@id="styleElementSelect"]')
+        #coastlineを選択 ２つのスライダーを0にする
+        Select(map_element).select_by_value('coastline')
+        ele = driver.find_element_by_xpath('//*[@id="styleStrokeWidth"]')
+        move.click_and_hold(ele).move_by_offset(-70, 0).release().perform()
+        ele = driver.find_element_by_xpath('//*[@id="styleOpacity"]')
+        move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
+        #landmassを選択 スライダを0にする
+        Select(map_element).select_by_value('landmass')
+        ele = driver.find_element_by_xpath('//*[@id="styleOpacity"]')
+        move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
+        #coastlineを選択 ２つのスライダーを0にする
+        Select(map_element).select_by_value('lakes')
+        ele = driver.find_element_by_xpath('//*[@id="styleStrokeWidth"]')
+        move.click_and_hold(ele).move_by_offset(-70, 0).release().perform()
+        ele = driver.find_element_by_xpath('//*[@id="styleOpacity"]')
+        move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
+
 def map_setting(driver, width, height, template):
         #menuボタンを押す
         driver.find_element_by_xpath('//*[@id="optionsTrigger"]').click()
-        #sleep(3)
         #heatmapに設定する
         map_element = driver.find_element_by_xpath('//*[@id="layoutPreset"]')
         Select(map_element).select_by_value('layoutHeightmap')
-        #sleep(5)
+        #Riversをボタンをoffにする
+        driver.find_element_by_xpath('//*[@id="toggleRivers"]').click()
+        #style変更
+        map_style_setting(driver, template)
         #optionを押す
         driver.find_element_by_xpath('//*[@id="optionsTab"]').click()
-        #sleep(3)
         #画像の大きさを入力する
         width_ele = driver.find_element_by_xpath('//*[@id="mapWidthInput"]')
         width_ele.clear()
@@ -54,6 +82,15 @@ def map_setting(driver, width, height, template):
         driver.find_element_by_xpath('//*[@id="dialogs"]/div[19]/div[1]/button').click()
         #optionを押す(設定取得のため)
         driver.find_element_by_xpath('//*[@id="optionsTab"]').click()
+        #設定画面の透明度を上げてマップを見れるようにする
+        move = ActionChains(driver)
+        ele = driver.find_element_by_xpath('//*[@id="transparencyInput"]')
+        move.click_and_hold(ele).move_by_offset(90, 0).release().perform()
+        #png resolutionを等倍にする
+        ele = driver.find_element_by_xpath('//*[@id="pngResolutionInput"]')
+        move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
+
+        
 
 def save_map_images(driver,download_directory):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "randomMap")))
@@ -74,7 +111,7 @@ def main():
         width = "320"
         height = "180"
         driver, download_directory = driver_setting()
-        map_setting(driver, width, height, template_list[0])
+        map_setting(driver, width, height, "Archipelago")
         for i in trange(number_of_times):
                 save_map_images(driver,download_directory)
 
