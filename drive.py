@@ -7,6 +7,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 import os
 
 
@@ -24,17 +25,24 @@ def driver_setting():
         driver.get("https://azgaar.github.io/Fantasy-Map-Generator/")
         return driver, download_directory
 
+
+def map_style_setting(driver, template):
+        driver.find_element_by_xpath('//*[@id="styleTab"]').click()
+
+        ocean_opacity_ele = driver.find_element_by_xpath('//*[@id="styleOpacityInput"]')
+        move = ActionChains(driver)
+        move.click_and_hold(ocean_opacity_ele).move_by_offset(-60, 0).release().perform()
+
 def map_setting(driver, width, height, template):
         #menuボタンを押す
         driver.find_element_by_xpath('//*[@id="optionsTrigger"]').click()
-        #sleep(3)
         #heatmapに設定する
         map_element = driver.find_element_by_xpath('//*[@id="layoutPreset"]')
         Select(map_element).select_by_value('layoutHeightmap')
-        #sleep(5)
+        #style変更
+        map_style_setting(driver, template)
         #optionを押す
         driver.find_element_by_xpath('//*[@id="optionsTab"]').click()
-        #sleep(3)
         #画像の大きさを入力する
         width_ele = driver.find_element_by_xpath('//*[@id="mapWidthInput"]')
         width_ele.clear()
