@@ -51,6 +51,12 @@ def map_style_setting(driver, template):
 	move.click_and_hold(ele).move_by_offset(-70, 0).release().perform()
 	ele = driver.find_element_by_xpath('//*[@id="styleOpacity"]')
 	move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
+	#heightmapのscheme_elementでmonochromeを選ぶ
+	Select(map_element).select_by_value('terrs')
+	scheme_element = driver.find_element_by_xpath('//*[@id = "styleSchemeInput"]')
+	Select(scheme_element).select_by_value('monochrome')
+
+
 
 def map_setting(driver, width, height, template):
 	#menuボタンを押す
@@ -71,6 +77,10 @@ def map_setting(driver, width, height, template):
 	height_ele = driver.find_element_by_xpath('//*[@id="mapHeightInput"]')
 	height_ele.clear()
 	height_ele.send_keys(height)
+	#map cells densityを3(high)に設定する
+	ele = driver.find_element_by_xpath('//*[@id="sizeInput"]')
+	move = ActionChains(driver)
+	move.click_and_hold(ele).move_by_offset(50, 0).release().perform()
 	#属性を設定する
 	map_element = driver.find_element_by_xpath('//*[@id="templateInput"]')
 	Select(map_element).select_by_value(template)
@@ -137,8 +147,8 @@ def main():
 	number_of_times = 3000
 	template_list = ["Volcano", "High Island", "Low Island", "Continents", "Archipelago", "Atoll", "Mainland", "Peninsulas"]
 	template = "Archipelago"
-	width = "320"
-	height = "180"
+	width = "480"
+	height = "240"
 	driver, download_directory = driver_setting()
 	map_setting(driver, width, height, template)
 	for i in trange(number_of_times):
