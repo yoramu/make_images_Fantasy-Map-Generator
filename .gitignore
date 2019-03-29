@@ -119,3 +119,5 @@ dmypy.json
 .DS_Store
 *.txt
 *.png
+*.html
+*.svg
