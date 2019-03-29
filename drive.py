@@ -103,22 +103,31 @@ def map_setting(driver, width, height, template):
 	move.click_and_hold(ele).move_by_offset(-90, 0).release().perform()
 
 
-def save_map_images(driver, download_directory, template, width, height, flag):
+def save_map_images(driver, download_directory, template, width, height, flag, download_ways):
 	WebDriverWait(driver, 10).until(
 	    EC.element_to_be_clickable((By.ID, "randomMap")))
 	driver.find_element_by_xpath('//*[@id="randomMap"]').click()
-	WebDriverWait(driver, 10).until(
-	    EC.element_to_be_clickable((By.ID, "saveButton")))
-	driver.find_element_by_xpath('//*[@id="saveButton"]').click()
-	WebDriverWait(driver, 10).until(
-	    EC.element_to_be_clickable((By.ID, "savePNG")))
-	driver.find_element_by_xpath('//*[@id="savePNG"]').click()
-	WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "saveButton")))
-	driver.find_element_by_xpath('//*[@id="saveButton"]').click()
-	WebDriverWait(driver, 10).until(
-	    EC.element_to_be_clickable((By.ID, "savePNG")))
-	driver.find_element_by_xpath('//*[@id="saveSVG"]').click()
+	if "png" in download_ways:
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "saveButton")))
+		driver.find_element_by_xpath('//*[@id="saveButton"]').click()
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "savePNG")))
+		driver.find_element_by_xpath('//*[@id="savePNG"]').click()
+	if "svg" in download_ways:
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "saveButton")))
+		driver.find_element_by_xpath('//*[@id="saveButton"]').click()
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "saveSVG")))
+		driver.find_element_by_xpath('//*[@id="saveSVG"]').click()
+	if "map" in download_ways:
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "saveButton")))
+		driver.find_element_by_xpath('//*[@id="saveButton"]').click()
+		WebDriverWait(driver, 10).until(
+			EC.element_to_be_clickable((By.ID, "saveMap")))
+		driver.find_element_by_xpath('//*[@id="saveMap"]').click()
 	# don't show again
 	if not flag:
 		driver.find_element_by_xpath(
@@ -163,13 +172,14 @@ def main():
 	flag = False
 	number_of_times = 3000
 	template_list = ["Volcano", "High Island", "Low Island", "Continents", "Archipelago", "Atoll", "Mainland", "Peninsulas"]
+	download_ways = ["png","svg","map"]
 	template = "Archipelago"
 	width = "1024"
 	height = "512"
 	driver, download_directory = driver_setting()
 	map_setting(driver, width, height, template)
 	for i in trange(number_of_times):
-		save_map_images(driver, download_directory, template, width, height, flag)
+		save_map_images(driver, download_directory, template, width, height, flag, download_ways)
 		flag = True
 
 
