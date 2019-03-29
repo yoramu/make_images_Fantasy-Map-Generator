@@ -113,6 +113,12 @@ def save_map_images(driver, download_directory, template, width, height, flag):
 	WebDriverWait(driver, 10).until(
 	    EC.element_to_be_clickable((By.ID, "savePNG")))
 	driver.find_element_by_xpath('//*[@id="savePNG"]').click()
+	WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "saveButton")))
+	driver.find_element_by_xpath('//*[@id="saveButton"]').click()
+	WebDriverWait(driver, 10).until(
+	    EC.element_to_be_clickable((By.ID, "savePNG")))
+	driver.find_element_by_xpath('//*[@id="saveSVG"]').click()
 	# don't show again
 	if not flag:
 		driver.find_element_by_xpath(
